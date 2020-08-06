@@ -1,4 +1,9 @@
 {
     "workbench.colorTheme": "Solarized Light",
-    "terminal.integrated.shellArgs.linux": ["-l"]
+    "terminal.integrated.shellArgs.linux": [
+        "-l"
+    ],
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "php.validate.executablePath": "/usr/bin/php"
 }
+

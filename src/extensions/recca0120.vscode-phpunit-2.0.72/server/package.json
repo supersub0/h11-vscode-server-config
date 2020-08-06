@@ -1,0 +1,29 @@
+{
+    "name": "lsp-phpunit-server",
+    "description": "PHPUnit Language Server.",
+    "version": "1.0.0",
+    "author": "recca0120",
+    "license": "MIT",
+    "engines": {
+        "node": "*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/recca0120/vscode-phpunit"
+    },
+    "dependencies": {
+        "glob": "^7.1.4",
+        "he": "^1.2.0",
+        "md5": "^2.2.1",
+        "php-parser": "^3.0.0-prerelease.8",
+        "strip-ansi": "^5.2.0",
+        "vscode-languageserver": "^5.2.1"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/he": "^1.1.0",
+        "@types/md5": "^2.1.33",
+        "@types/strip-ansi": "^5.2.1"
+    },
+    "scripts": {}
+}

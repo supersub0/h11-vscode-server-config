@@ -1,0 +1,199 @@
+{
+	"name": "vscode-phpunit",
+	"description": "PHPUnit Test Explorer",
+	"displayName": "PHPUnit Test Explorer",
+	"icon": "img/icon.png",
+	"author": "recca0120",
+	"license": "MIT",
+	"version": "2.0.72",
+	"preview": true,
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/recca0120/vscode-phpunit"
+	},
+	"publisher": "recca0120",
+	"categories": [
+		"Other",
+		"Debuggers",
+		"Programming Languages"
+	],
+	"keywords": [
+		"test",
+		"testing",
+		"test explorer",
+		"phpunit",
+		"language server protocol"
+	],
+	"engines": {
+		"vscode": "^1.30.0"
+	},
+	"activationEvents": [
+		"*"
+	],
+	"extensionDependencies": [
+		"hbenl.vscode-test-explorer"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "phpunit.run-all",
+				"title": "PHPUnit: Run all tests"
+			},
+			{
+				"command": "phpunit.run-file",
+				"title": "PHPUnit: Run tests in current file"
+			},
+			{
+				"command": "phpunit.run-test-at-cursor",
+				"title": "PHPUnit: Run the test at the current cursor position"
+			},
+			{
+				"command": "phpunit.rerun",
+				"title": "PHPUnit: Repeat the last test run"
+			}
+		],
+		"keybindings": [
+			{
+				"key": "cmd+t cmd+f",
+				"command": "phpunit.run-file",
+				"when": "editorTextFocus && editorLangId = php"
+			},
+			{
+				"key": "cmd+t cmd+t",
+				"command": "phpunit.run-test-at-cursor",
+				"when": "editorTextFocus && editorLangId = php"
+			},
+			{
+				"key": "cmd+t cmd+l",
+				"command": "phpunit.rerun",
+				"when": "editorTextFocus && editorLangId = php"
+			},
+			{
+				"key": "cmd+t cmd+d",
+				"command": "phpunit.run-directory",
+				"when": "editorTextFocus && editorLangId = php"
+			},
+			{
+				"key": "cmd+t cmd+s",
+				"command": "phpunit.run-all"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "PHPUnit configuration",
+			"properties": {
+				"phpunit.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"phpunit.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				},
+				"phpunit.logpanel": {
+					"description": "write diagnotic logs to an output panel",
+					"type": "boolean",
+					"scope": "resource"
+				},
+				"phpunit.logfile": {
+					"description": "write diagnostic logs to the given file",
+					"type": "string",
+					"scope": "resource"
+				},
+				"phpunit.php": {
+					"type": "string",
+					"description": "Absolute path to php. Fallback to global php if it exists on the command line."
+				},
+				"phpunit.phpunit": {
+					"type": "string",
+					"description": "Path to phpunit. Can be the phpunit file or phpunit.phar.\n\nAutomatically finds it in common places:\n  - Composer vendor directory\n  - phpunit.phar in your project\n  - phpunit (or phpunit.bat for windows) globally on the command line"
+				},
+				"phpunit.args": {
+					"type": "array",
+					"default": [],
+					"description": "Any phpunit args (phpunit --help) E.g. --configuration ./phpunit.xml.dist"
+				},
+				"phpunit.files": {
+					"description": "The glob(s) describing the location of your test files (relative to the workspace folder)",
+					"type": "string",
+					"items": {
+						"type": "string"
+					},
+					"default": "{test,tests,Test,Tests}/**/*Test.php",
+					"scope": "resource"
+				},
+				"phpunit.clearOutputOnRun": {
+					"type": "boolean",
+					"default": true,
+					"description": "True will clear the output when we run a new test. False will leave the output after every test."
+				},
+				"phpunit.showAfterExecution": {
+					"type": "string",
+					"enum": [
+						"always",
+						"onFailure",
+						"never"
+					],
+					"default": "onFailure",
+					"description": "Specify if the test report will automatically be shown after execution",
+					"scope": "application"
+				}
+			}
+		},
+		"grammars": [
+			{
+				"language": "Log",
+				"scopeName": "code.log",
+				"path": "./client/syntaxes/phpunit.tmLanguage"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run clean && npm run compile",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"compile": "npm run compile:client && npm run compile:server",
+		"compile:client": "webpack --mode production --config ./client/webpack.config.js",
+		"_compile:client": "tsc -b ./client/tsconfig.json",
+		"compile:server": "webpack --mode production --config ./server/webpack.config.js",
+		"watch:client": "tsc -b -w ./client/tsconfig.json",
+		"_watch:client": "webpack --mode none --config ./client/webpack.config.js --watch",
+		"watch:server": "webpack --mode none --config ./server/webpack.config.js --watch",
+		"watch": "tsc -b -w",
+		"clean": "rimraf client/out && rimraf server/out",
+		"test": "sh ./scripts/e2e.sh",
+		"jest": "npm run compile && jest",
+		"jest:watch": "jest --watch",
+		"report": "jest --coverage",
+		"report:watch": "jest --coverage --watch"
+	},
+	"devDependencies": {
+		"@types/jest": "^24.0.13",
+		"@types/node": "^12.0.4",
+		"jest": "^24.8.0",
+		"merge-options": "^1.0.1",
+		"rimraf": "^2.6.3",
+		"ts-jest": "^24.0.2",
+		"ts-loader": "^6.0.2",
+		"tslint": "^5.17.0",
+		"typescript": "^3.5.1",
+		"vscode": "^1.1.36",
+		"webpack": "^4.32.2",
+		"webpack-cli": "^3.3.2"
+	},
+	"dependencies": {},
+	"__metadata": {
+		"id": "recca0120.vscode-phpunit",
+		"publisherId": "recca0120",
+		"publisherDisplayName": "recca0120"
+	}
+}
